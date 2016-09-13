@@ -8,7 +8,7 @@ if [[ $(id -u) -ne 0 ]] ; then
     exit 1
 fi
 
-if [ $# != 8 ]; then
+if [ $# != 3 ]; then
     echo "Usage: $0 <MasterHostname> <mountFolder> <numDataDisks> "
     exit 1
 fi
@@ -28,56 +28,56 @@ setup_dynamicdata_disks()
 
     # Loop through and partition disks until not found
 
-    if [ "$numberofDisks" == "1" ]
-    then
-    disking=( sdc )
-    elif [ "$numberofDisks" == "2" ]; then
-    disking=( sdc sdd )
-    elif [ "$numberofDisks" == "3" ]; then
-    disking=( sdc sdd sde )
-    elif [ "$numberofDisks" == "4" ]; then
-    disking=( sdc sdd sde sdf )
-    elif [ "$numberofDisks" == "5" ]; then
-    disking=( sdc sdd sde sdf sdg )
-    elif [ "$numberofDisks" == "6" ]; then
-    disking=( sdc sdd sde sdf sdg sdh )
-    elif [ "$numberofDisks" == "7" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi )
-    elif [ "$numberofDisks" == "8" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj )
-    elif [ "$numberofDisks" == "9" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk )
-    elif [ "$numberofDisks" == "10" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl )
-    elif [ "$numberofDisks" == "11" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm )
-    elif [ "$numberofDisks" == "12" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn )
-    elif [ "$numberofDisks" == "13" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo )
-    elif [ "$numberofDisks" == "14" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp )
-    elif [ "$numberofDisks" == "15" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp sdq )
-    elif [ "$numberofDisks" == "16" ]; then
-    disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp sdq sdr )
-    fi
+if [ "$numberofDisks" == "1" ]
+then
+disking=( sdc )
+elif [ "$numberofDisks" == "2" ]; then
+disking=( sdc sdd )
+elif [ "$numberofDisks" == "3" ]; then
+disking=( sdc sdd sde )
+elif [ "$numberofDisks" == "4" ]; then
+disking=( sdc sdd sde sdf )
+elif [ "$numberofDisks" == "5" ]; then
+disking=( sdc sdd sde sdf sdg )
+elif [ "$numberofDisks" == "6" ]; then
+disking=( sdc sdd sde sdf sdg sdh )
+elif [ "$numberofDisks" == "7" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi )
+elif [ "$numberofDisks" == "8" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj )
+elif [ "$numberofDisks" == "9" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk )
+elif [ "$numberofDisks" == "10" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl )
+elif [ "$numberofDisks" == "11" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm )
+elif [ "$numberofDisks" == "12" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn )
+elif [ "$numberofDisks" == "13" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo )
+elif [ "$numberofDisks" == "14" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp )
+elif [ "$numberofDisks" == "15" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp sdq )
+elif [ "$numberofDisks" == "16" ]; then
+disking=( sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp sdq sdr )
+fi
 
-    printf "%s\n" "${disking[@]}"
+printf "%s\n" "${disking[@]}"
 
-    for disk in "${disking[@]}"
-    do
-            fdisk -l /dev/$disk || break
-            fdisk /dev/$disk << EOF
-    n
-    p
-    1
+for disk in "${disking[@]}"
+do
+        fdisk -l /dev/$disk || break
+        fdisk /dev/$disk << EOF
+n
+p
+1
 
 
-    t
-    fd
-    w
-    EOF
+t
+fd
+w
+EOF
         createdPartitions="$createdPartitions /dev/${disk}1"
     done
 
@@ -94,9 +94,9 @@ setup_dynamicdata_disks()
 
             #mount -o defaults,noatime "${device}" "${mount}"
             # Set up the blkid for device entry in /etc/fstab
-            echo "UUID=${blockid} $mountPoint etx4 defaults,nofail 0 2" >> /etc/fstab
+            echo "UUID=${blockid} $mountPoint ext4 defaults,nofail 0 2" >> /etc/fstab
             #echo "/dev/md10 $mountPoint ext4 defaults,nofail 0 2" >> /etc/fstab
-            
+            sudo chmod go+w $mountPoint
         fi
 }
 
