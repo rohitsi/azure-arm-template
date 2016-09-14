@@ -28,8 +28,7 @@ setup_dynamicdata_disks()
 
     # Loop through and partition disks until not found
 
-if [ "$numberofDisks" == "1" ]
-then
+if [ "$numberofDisks" == "1" ]; then
 disking=( sdc )
 elif [ "$numberofDisks" == "2" ]; then
 disking=( sdc sdd )
