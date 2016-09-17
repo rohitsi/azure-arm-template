@@ -30,4 +30,5 @@ blockid=$(/sbin/blkid|grep $disk|awk '{print $2}'|awk -F\= '{print $2}'|sed -e"s
 # Set up the blkid for device entry in /etc/fstab
 echo "UUID=${blockid} $mountPoint ext4 defaults, nofail   0    2" >> /etc/fstab
 sudo chmod go+w $mountPoint
-
+mkdir /datadrive/db
+mkdir /datadrive/logs
